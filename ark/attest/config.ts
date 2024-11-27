@@ -54,6 +54,7 @@ type BaseAttestConfig = {
 	 * }
 	 */
 	typeToStringFormat: prettier.Options
+	cacheDir: string
 }
 
 export type AttestConfig = Partial<BaseAttestConfig>
@@ -73,7 +74,8 @@ export const getDefaultAttestConfig = (): BaseAttestConfig => ({
 	testDeclarationAliases: ["bench", "it", "test"],
 	formatCmd: `npm exec --no -- prettier --write`,
 	shouldFormat: true,
-	typeToStringFormat: {}
+	typeToStringFormat: {},
+	cacheDir: resolve(".attest")
 })
 
 const flagAliases: { [k in keyof AttestConfig]?: string[] } = {
@@ -146,7 +148,7 @@ export interface ParsedAttestConfig extends Readonly<BaseAttestConfig> {
 
 const parseConfig = (): ParsedAttestConfig => {
 	const baseConfig = addEnvConfig(getDefaultAttestConfig())
-	const cacheDir = resolve(".attest")
+	const cacheDir = baseConfig.cacheDir
 	const assertionCacheDir = join(cacheDir, "assertions")
 	const defaultAssertionCachePath = join(assertionCacheDir, "typescript.json")
 
